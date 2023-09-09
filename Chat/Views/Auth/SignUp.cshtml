@@ -1,0 +1,232 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <title>Login Page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="Login/css/style.css">
+
+
+
+</head>
+<body class="img js-fullheight" style="background-image: url(Login/images/bg.jpg);">
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">@*Login #10*@</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="login-wrap p-0">
+                        <h3 class="mb-4 text-center">Sign Up | Rest Password</h3>
+                        <form id="stepone" class="signin-form">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Email" id="Email" required>
+                                
+                            </div> 
+                            <div class="form-group">
+                                <input type="number" class="form-control" placeholder="Phone Number" id="Phonenumber" required>
+
+                            </div>
+                            @*<div class="form-group">
+                                <input type="password" class="form-control" placeholder="Password" id="password" required>
+                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                            </div>*@
+                            <div class="form-group">
+                                <button type="submit" id="submit" class="form-control btn btn-primary submit px-3">Send Me Verification Code</button>
+                            </div>
+                            <div class="form-group d-md-flex">
+                               
+                               
+                            </div>
+                        </form>
+                        
+                        
+                        
+                        <form id="steptwo" class="signin-form" style="display: none;">
+                 
+                            
+                            <div class="form-group" style="display: flex;">
+    
+                                <input type="text" class="form-control" placeholder="Username" id="username" required="" style="width: 90%;display: none;">
+                                <input type="checkbox" id="namecheckbox" name="namecheckbox" style="width: 5%;margin: 10px;"><p id="namecheckboxtext" style="margin: 10px;"> Friendly Username / change username </p>                       
+                            </div>
+                           
+                            <div class="form-group">
+                                <input type="number" class="form-control" placeholder="Verification Code" id="verificationcode" required="">
+
+                            </div>
+
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Password" id="password" required="">
+
+                            </div> 
+
+                            <div class="form-group">
+                                <button type="submit" id="finalsubmit" class="form-control btn btn-primary submit px-3">Sign me in</button>
+                            </div>
+                            <div class="form-group d-md-flex">
+                            </div>
+                        </form>
+                        
+                        
+
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="Login/js/jquery.min.js"></script>
+    <script src="Login/js/popper.js"></script>
+    <script src="Login/js/bootstrap.min.js"></script>
+    <script src="Login/js/main.js"></script>
+
+</body>
+</html>
+
+
+
+<script>
+
+
+
+    $(document).ready(function () {
+
+
+
+        var data = { userEmail: "", phoneNumber: "", userName: "", verificationCode: "", password:"" };
+
+
+        $(document).on('click', '#submit',
+            function (e) {
+                e.preventDefault();
+
+                
+                data.userEmail = $("#Email").val();
+                data.phoneNumber = $("#Phonenumber").val();
+
+
+                $.ajax(
+                    {
+                        method: "post",
+                        url: 'api/User/SignUpWithEmailPhase1',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (data) {
+                            console.log(data);
+                            if (data.statusCode !== 200) {
+                                alert(data.response);
+                                return
+                            }
+                            //localStorage.setItem('token', '' + data);
+                            //window.location.replace("/chat");
+                            $("#stepone").hide(1000);
+                            $("#steptwo").show(1000);
+                            $("#username").val("");
+                            $("#password").val("");
+
+
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            var response = jQuery.parseJSON(xhr.responseText);
+                            notyf.dismissAll();
+                            notyf.error({
+                                message: response.Message,
+                                duration: 5000
+                            });
+                        }
+                    });
+
+
+
+
+            });
+
+
+
+
+        $(document).on('click', '#finalsubmit',
+            function (e) {
+                e.preventDefault();
+
+
+                data.userName = $("#username").val();
+                data.verificationCode = $("#verificationcode").val();
+                data.password = $("#password").val();
+
+
+                $.ajax(
+                    {
+                        method: "post",
+                        url: 'api/User/SignUpWithEmailPhase2',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (data) {
+                            console.log(data);
+                            debugger;
+                            if(data.statusCode !==200){
+                                alert(data.response);
+                            return
+                            }
+                            localStorage.setItem('token', '' + data.response);
+                            window.location.replace("/chat");
+                           
+
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            var response = jQuery.parseJSON(xhr.responseText);
+                            notyf.dismissAll();
+                            notyf.error({
+                                message: response.Message,
+                                duration: 5000
+                            });
+                        }
+                    });
+
+
+
+
+            });
+
+
+
+        $(document).on('click', '#namecheckbox',
+            function (e) {
+                
+
+
+                if ($(this).is(':checked')) {
+
+                    $("#namecheckboxtext").hide(1000);
+                    $("#username").show(1000);
+                    $("#username").val("");
+                }else{
+                    
+                    $("#namecheckboxtext").show(1000);
+                    $("#username").hide(1000);
+                    $("#username").val("");
+                }
+
+            });
+            
+
+
+
+    });
+
+
+
+
+
+
+
+</script>

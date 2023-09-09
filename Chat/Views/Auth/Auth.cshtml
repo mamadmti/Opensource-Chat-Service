@@ -1,0 +1,143 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <title>Login Page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="Login/css/style.css">
+    
+
+
+</head>
+<body class="img js-fullheight" style="background-image: url(Login/images/bg.jpg);">
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">@*Login #10*@</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="login-wrap p-0">
+                        <h3 class="mb-4 text-center">Have an account?</h3>
+                        <form action="#" class="signin-form">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Username" id="username" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Password" id="password" required>
+                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" id="submit" class="form-control btn btn-primary submit px-3">Sign In</button>
+                            </div>
+                            <div class="form-group d-md-flex">
+                                <div class="w-50">
+                                    <label class="checkbox-wrap checkbox-primary">
+                                        Remember Me
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="w-50 text-md-right">
+                                    <a href="/signup" style="color: #fff">Forgot Password</a>
+                                </div>
+                            </div>
+                        </form>
+                        <div style="text-align: center;">
+
+                            <a href="/signup" class="tosignup pointer w-100 text-center">&mdash; Or Sign Up With Email &mdash;</a>
+
+                        </div>
+                       @* <div class="social d-flex text-center">
+                            <a href="#" class="px-2 py-2 mr-md-1 rounded"><span class="ion-logo-facebook mr-2"></span> Facebook</a>
+                            <a href="#" class="px-2 py-2 ml-md-1 rounded"><span class="ion-logo-twitter mr-2"></span> Twitter</a>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="Login/js/jquery.min.js"></script>
+    <script src="Login/js/popper.js"></script>
+    <script src="Login/js/bootstrap.min.js"></script>
+    <script src="Login/js/main.js"></script>
+
+</body>
+</html>
+
+
+
+<script>
+
+
+
+    $(document).ready(function () {
+
+
+
+
+
+        $(document).on('click', '#submit',
+            function (e) {
+                e.preventDefault();
+
+                var data = { userName: "", password: "" };
+
+                data.username = $("#username").val();
+                data.password = $("#password").val();
+
+
+                $.ajax(
+                    {
+                        method: "post",
+                        url: 'api/User/Login',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (data) {
+
+                            if (data.statusCode !== 200) {
+                                alert(data.response);
+                                return;
+                            }
+
+                            console.log(data);
+                            localStorage.setItem('token', '' + data.response);
+                            window.location.replace("/chat");
+
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            var response = jQuery.parseJSON(xhr.responseText);
+                            notyf.dismissAll();
+                            notyf.error({
+                                message: response.Message,
+                                duration: 5000
+                            });
+                        }
+                    });
+
+
+
+
+            });
+
+
+
+       
+
+    });
+
+
+
+
+
+
+
+</script>

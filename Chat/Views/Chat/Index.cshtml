@@ -1,0 +1,1212 @@
+﻿@*@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor*@
+
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>CodePen - Telegram Web Layout - Material Design</title>
+    <meta charset="UTF-8">
+    @*<meta name="viewport" content="width=device-width, initial-scale=1">*@
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+	
+    
+</head>
+
+<body style="width: -webkit-fill-available;height: 100vh;overflow-y: auto;">
+	<!-- partial:index.partial.html -->
+	<!--
+	Reference image: https://telegram.org/file/811140968/3/UfbcOfXv2YU.118417/b230905e577f9cc2de
+
+	LICENSE: https://creativecommons.org/licenses/by/3.0/
+	-->
+	<!-- -------- -->
+	<!-- MAIN APP -->
+<!-- -------- -->
+
+    @{
+		Html.RenderPartial("Shared/GroupCreationPartialView");
+	}
+
+	@{
+		Html.RenderPartial("Shared/PeoplePartialView");
+	}
+
+<section class="mainApp">
+		<div class="leftPanel">
+			<header>
+				<button class="trigger">
+					<svg viewBox="0 0 24 24">
+						<path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
+					</svg>
+				</button>
+
+				<input class="searchChats" type="search" placeholder="Search..." />
+			</header>
+			<div class="chats">
+				@*<div class="chatButton active">
+					<div class="chatInfo">
+						<div class="image my-image">
+						</div>
+
+						<p class="name">
+							Renan Mayrinck
+						</p>
+
+						<p class="message">Actually, more ...</p>
+					</div>
+
+					<div class="status onTop">
+						<p class="date">00:02</p>
+						<p class="count">10</p>
+						<i class="material-icons read">done_all</i>
+						<svg class="fixed" viewBox="0 0 24 24">
+							<path d="M16,12V4H17V2H7V4H8V12L6,14V16H11.2V22H12.8V16H18V14L16,12Z" />
+						</svg>
+					</div>
+				</div>*@
+
+				@*<div class="chatButton">
+					<div class="chatInfo">
+						<div class="image">
+						</div>
+
+						<p class="name">
+							Doge
+						</p>
+
+						<p class="message">Wow!</p>
+					</div>
+
+					<div class="status normal">
+						<p class="date">Now</p>
+						<p class="count">42</p>
+						<i class="material-icons read">done_all</i>
+						<i class="material-icons fixed">loyalty</i>
+					</div>
+				</div>*@
+			</div>
+		</div>
+
+		<div class="rightPanel" id="rightPanel" style="display: none;">
+			<div class="topBar">
+				<div class="rightSide">
+					<button class="tbButton search">
+						<i class="material-icons">&#xE8B6;</i>
+					</button>
+					<button class="tbButton otherOptions">
+						<i class="material-icons">more_vert</i>
+					</button>
+				</div>
+
+				<div class="leftSide">
+					<p class="chatName">Renan Mayrinck <span>RenanMayrinckDesign</span></p>
+					<p class="chatStatusoffline">Offline</p>
+				</div>
+			</div>
+
+			@*<div class="convHistory userBg" style="display: none;">
+				<!-- CONVERSATION GOES HERE! -->
+
+				<div class="msg messageReceived">
+					Dude, why no one did this before?
+					<span class="timestamp">00:00</span>
+				</div>
+
+				<div class="msg messageSent">
+					Dunno...
+					<i class="material-icons readStatus">done_all</i>
+					<span class="timestamp">00:01</span>
+				</div>
+
+				<div class="msg messageReceived">
+					This don't matter now, I did it!
+					<span class="timestamp">00:02</span>
+				</div>
+
+				<div class="msg messageReceived">
+					Hope someone see this... Someday...
+					<span class="timestamp">00:02</span>
+				</div>
+
+				<div class="msg messageSent">
+					Actually, more than 10K people did... Congrats!
+					<i class="material-icons readStatus">done</i>
+					<span class="timestamp">00:04</span>
+				</div>
+			</div>
+*@
+			<div class="replyBar">
+				<button class="attach">
+					<i class="material-icons d45">attach_file</i>
+				</button>
+
+				<input type="text" class="replyMessage" placeholder="Type your message..." />
+
+				<div class="emojiBar">
+					<div class="emoticonType">
+						<button id="panelEmoji">Emoji</button>
+						<button id="panelStickers">Stickers</button>
+						<button id="panelGIFs">GIFs</button>
+					</div>
+
+
+					<!-- Emoji panel -->
+					<div class="emojiList">
+						<button id="smileface" class="pick">
+						</button>
+						<button id="grinningface" class="pick"></button>
+						<button id="tearjoyface" class="pick"></button>
+						<button id="rofl" class="pick"></button>
+						<button id="somface" class="pick"></button>
+						<button id="swfface" class="pick"></button>
+					</div>
+
+					<!-- the best part of telegram ever: STICKERS!! -->
+					<div class="stickerList">
+						<button id="smileface" class="pick">
+						</button>
+						<button id="grinningface" class="pick"></button>
+						<button id="tearjoyface" class="pick"></button>
+					</div>
+				</div>
+
+				<div class="otherTools">
+					<button class="toolButtons emoji">
+						<i class="material-icons">face</i>
+					</button>
+
+					<button class="toolButtons audio">
+						<i class="material-icons">mic</i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ---------------------- -->
+	<!-- MENU AND OVERLAY STUFF -->
+	<!-- ---------------------- -->
+	<!-- MENU -->
+	<section class="menuWrap" id="menuWrap">
+		<div class="menu">
+			<div class="me userBg">
+				<div class="image"></div>
+
+				<div class="myinfo">
+					<p class="name" id="theusername"> Name </p>
+					<p class="phone"> </p>
+				</div>
+
+				<button class="cloud">
+					<i class="material-icons">bookmark</i>
+				</button>
+
+				<button class="settings">
+					<i class="material-icons">settings</i>
+				</button>
+			</div>
+			<nav>
+                <button class="ng" id ="newGroup">
+                    <i class="material-icons">&#xE8D3;</i>
+
+                    <span>New Group</span>
+                </button>
+
+                <button class="cn" id="openPeople">
+                    <i class="material-icons">&#xE851;</i>
+
+                    <span>People</span>
+                </button>
+
+				@*<button class="nc">
+					<i class="material-icons">&#xE0B6;</i>
+
+					<span>New Channel</span>
+				</button>
+
+
+
+				<button class="cl">
+					<i class="material-icons">&#xE0B0;</i>
+
+					<span>Calls History</span>
+				</button>*@
+
+				@*<a href="https://telegram.org/faq" target="_blank">
+					<button class="faq">
+						<i class="material-icons">&#xE000;</i>
+
+						<span>FAQ and Support</span>
+					</button>
+				</a>*@
+
+				<button class="lo">
+					<i class="material-icons">&#xE879;</i>
+
+					<span>Logout</span>
+				</button>
+			</nav>
+
+			@*<div class="info">
+				<p>Telegram Web</p>
+				<p>Ver 0.0.2 - <a href="https://en.wikipedia.org/wiki/Telegram_(messaging_service)">About</a></p>
+				<p>Layout coded by: <a href="https://www.github.com/mayrinck">Mayrinck</a></p>
+			</div>*@
+		</div>
+	</section>
+
+	<!-- CONVERSATION OPTIONS MENU -->
+	<div class="moreMenu">
+		<button class="option about">See Info</button>
+		<button class="option notify">Disable Notifications</button>
+		<button class="option block">Block User</button>
+	</div>
+
+@*	<!-- MOBILE OVERLAY -->
+	<section class="switchMobile">
+		<p class="title">Mobile Device Detected</p>
+
+		<p class="desc">Switch to the mobile app for a better performance.</p>
+
+		<a href="https://play.google.com/store/apps/details?id=org.telegram.messenger&hl=pt_BR&gl=US">
+			<button class="okay">OK</button>
+		</a>
+	</section>*@
+
+	<!-- PROFILE OPTIONS OVERLAY -->
+	@*<section class="config">
+		<section class="configSect">
+			<div class="profile">
+				<p class="confTitle">Settings</p>
+
+				<div class="image"></div>
+
+				<div class="side">
+					<p class="name">Random Name</p>
+					<p class="pStatus">Online</p>
+				</div>
+
+				<button class="changePic">Change Profile Picture</button>
+				<button class="edit">Edit Profile Info</button>
+			</div>
+		</section>
+
+		<section class="configSect second">
+
+			<!-- PROFILE INFO SECTION -->
+			<p class="confTitle">Your Info</p>
+
+			<div class="information">
+				<ul>
+					<li>Phone Number: <span class="blue phone">+1 12 1234 5678</span></li>
+					<li>Username: <span class="blue username">USERNAME</span></li>
+					<li>Profile: <span class="blue">https://t.me/USERNAME</span></li>
+				</ul>
+			</div>
+
+			<!-- NOTIFICATIONS SECTION -->
+			<p class="confTitle">Notifications</p>
+
+			<div class="optionWrapper deskNotif">
+				<input type="checkbox" id="deskNotif" class="toggleTracer" checked>
+
+				<label class="check deskNotif" for="deskNotif">
+					<div class="tracer"></div>
+				</label>
+				<p>Enable Desktop Notifications</p>
+			</div>
+
+			<div class="optionWrapper showSName">
+				<input type="checkbox" id="showSName" class="toggleTracer">
+
+				<label class="check" for="showSName">
+					<div class="tracer"></div>
+				</label>
+				<p>Show Sender Name</p>
+			</div>
+
+			<div class="optionWrapper showPreview">
+				<input type="checkbox" id="showPreview" class="toggleTracer">
+
+				<label class="check" for="showPreview">
+					<div class="tracer"></div>
+				</label>
+				<p>Show Message Preview</p>
+			</div>
+
+			<div class="optionWrapper playSounds">
+				<input type="checkbox" id="playSounds" class="toggleTracer">
+
+				<label class="check" for="playSounds">
+					<div class="tracer"></div>
+				</label>
+				<p>Play Sounds</p>
+			</div>
+
+
+			<p class="confTitle">Other Settings</p>
+
+			<div class="optionWrapper">
+				<input type="checkbox" id="checkNight" class="toggleTracer">
+
+				<label class="check DarkThemeTrigger" for="checkNight">
+					<div class="tracer"></div>
+				</label>
+				<p>Dark Theme</p>
+			</div>
+
+		</section>
+	</section>
+*@
+	<!-- DARK FRAME OVERLAY -->
+	<section class="overlay" id="overlay"></section>
+
+	<!-- -------------------------------- -->
+	<!-- SPECIFIC FOR CONNECTION WARNINGS -->
+	<!-- -------------------------------- -->
+	<div class="alerts">
+		Trying to reconnect...
+	</div>
+	<!-- partial -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+    <link href="~/css/style.css" rel="stylesheet" />
+<script src="~/js/script.js"></script>
+<script src="~/js/jwt-decode.js"></script>
+</body>
+</html>
+
+
+@*ChatSection*@
+@*@Html.Partial("Shared/ChatPartialView");*@
+@*End Chat Section*@
+
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+
+
+
+<script>
+    
+    $(document).ready(function () {
+        
+        //Notification.requestPermission().then(perm => {
+        //    if(perm === 'granted') {
+        //        new Notification("Example notification")
+        //    }
+        //})
+
+       
+
+        var decodedHeader = null;
+
+        if (localStorage.getItem('token') === null) {
+            location.replace("/");
+            return;
+        }
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl('/chathub', {
+                accessTokenFactory: () => String(localStorage.getItem('token'))
+            })
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+
+        connection.on("ShowMessage", function (SenderUsername, Message, GroupId,currentmessage) {
+            ////debugger
+
+            var res = null;
+            if (SenderUsername == decodedHeader.UserName){
+                ////debugger;
+                res = rendermyowntextmessage(currentmessage)
+                console.log(res, SenderUsername);
+                $('.d-show').append(res);
+            }else if (GroupId===null){
+                res = rendertextmessage(currentmessage);
+                console.log(res, SenderUsername);
+                $('.' + toUserName(SenderUsername)).append(res);
+            }
+            if (GroupId !== undefined && SenderUsername !== decodedHeader.UserName) {
+                res = rendertextmessage(currentmessage);
+				
+                $('.' + toGroupName(GroupId)).append(res);
+            }
+            $('.convHistory').animate({ scrollTop: 9999 }, 3000); // scroll down
+			
+            ///if user was in current chatlist then trigger acknowledge update message
+            if ($("." + toUserName(SenderUsername)).hasClass("d-show") && document.visibilityState !== "hidden") {
+                ack(toUserName(SenderUsername));
+
+            } 
+             else {
+
+                Notification.requestPermission().then(perm => {
+                    if (perm === 'granted' && SenderUsername !== decodedHeader.UserName ) {
+                        new Notification("Chat App", { body: SenderUsername + ": " + Message, icon: "images/icon-192x192.png" });
+                    }
+
+                });
+            }
+
+
+
+
+        });
+		
+		
+        connection.on("UpdateMessage", function (messageIds) {
+            //debugger;
+
+            console.log(messageIds);
+			
+            //now go update the check
+
+            messageIds.forEach(updatemessage);
+
+        });
+		
+        function updatemessage(item) {
+			
+            //update that message which current user was sent ( acknowledge )
+            //debugger;
+            var readStatus = ''
+            if (item.recordStatus === 0) {
+                readStatus = '<i class="material-icons readStatus">done</i> '
+            } else if (item.recordStatus === 1) {
+                readStatus = '<i class="material-icons readStatus">done_all</i> '
+            }
+
+            var html = '<div messageid="' + item.id + '" messagerecordstatus="' + item.recordStatus + '" class="msg messageSent">' + item.message + ' ' + readStatus + ' <span class="timestamp" >  ' + item.shortCreateAt + ' </span> </div>'
+
+            $('.msg[messageid="' + item.id + '"]').replaceWith(html);
+
+	
+        }
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+				
+                decodedHeader = jwt_decode( String(localStorage.getItem('token')) );
+                console.log(decodedHeader);
+				
+
+            } catch (err) {
+                console.log(err);
+                setTimeout(start, 5000);
+            }
+        };
+
+        connection.onclose(async () => {
+            await start();
+        });
+
+        // Start the connection.
+        start().then((e) => {
+                //joining current connection into hub
+                //connection.invoke("JoinIntoRole", 'admin').catch(function (err) {
+                //    return console.error(err.toString());
+                //});
+                //e.preventDefault();
+            })
+            .catch(function (err) {
+                //failed to connect
+                return console.error(err.toString());
+            });
+
+
+
+
+    
+        $(document).on('keypress',
+            '.replyMessage',
+            function (e) {
+				
+				
+				
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if (keycode == '13') {
+                    e.preventDefault();
+					
+                    //get Destination user addr
+                    ////
+                    var destuserid = toSolidUserName($(".leftPanel .active").attr('username'));
+                    var groupid = null;
+                    if ($(".leftPanel .active").attr('groupid') !== "null"){
+                        groupid = $(".leftPanel .active").attr('groupid');
+                        destuserid = null;
+                    }
+
+                    ////////////debugger
+                    connection.invoke("SendMessage", $(".replyMessage").val(), destuserid, groupid ).catch(function (err) {
+                        return console.error(err.toString());
+                    });
+                    $(".replyMessage").val("");
+                }
+
+				
+
+		
+            });
+
+
+        function RenderRecentMessages(item, index) {
+		
+            //////
+            if (item.userId == decodedHeader.UserGuid) {
+				
+                var res = rendermyowntextmessage(item);
+                $('.d-show').append(res)
+            }else{
+                var res = rendertextmessage(item)
+                $('.d-show').append(res)
+            }
+
+        }
+			
+
+        function rendertextmessage(item){
+            ////debugger;
+            var html = '<div messageid="' + item.id + '" messagerecordstatus="' + item.recordStatus + '" class="msg messageReceived">' + item.message + ' <span class="timestamp" >  ' + item.shortCreateAt + ' </span> </div>'
+		
+            return html;
+
+        }
+
+
+        function rendermyowntextmessage(item) {
+            ////debugger;
+            var readStatus = '' 
+            if(item.recordStatus === 0){
+                readStatus = '<i class="material-icons readStatus">done</i> ' 
+            }else if ( item.recordStatus === 1 ){
+                readStatus = '<i class="material-icons readStatus">done_all</i> ' 
+            }
+
+            var html = '<div messageid="' + item.id + '" messagerecordstatus="' + item.recordStatus + '"  class="msg messageSent">' + item.message + ' ' + readStatus + ' <span class="timestamp" > ' + item.shortCreateAt + ' </span> </div>'
+            return html;
+
+        }
+
+
+        var rightPanel = document.getElementById("rightPanel");
+
+        $(document).on("click", '.chatButton', function (){
+			
+			
+			
+
+            $(".chatButton").removeClass("active");
+            $(this).addClass(" active");
+            $('.rightPanel .convHistory').removeClass("d-show");
+            //alert($(this).attr('userid'));
+            var userid = $(this).attr('userid');
+            var groupid = $(this).attr('groupid');
+			
+			
+			
+            //check if current username exist in online users and then make it online
+			
+            renderonlineusers(); // refresh online users
+			
+            var username = toSolidUserName($(this).attr('userName'));
+            var frontusername = $(this).attr('userName');
+
+            var status = onlineusers.find(e => e.userName === username);
+
+            if (status) {
+				
+                $(".chatStatusoffline").text("Online");
+                $(".chatStatusoffline").addClass("online-user");
+            }else{
+                $(".chatStatusoffline").text("Offline");
+                $(".chatStatusoffline").removeClass("online-user");
+            }
+			
+
+            rightPanel.style.display = "block";
+            //For Groups
+            //if its group add groupid
+            if(userid === "0"){
+                //adds the id if group to view
+				
+                $('.rightPanel .' + $(this).attr('userName') + '').addClass(" d-show")
+                $('.rightPanel .chatName').html("" + $(this).attr('groupname') + "")
+				
+                $(".chatStatusoffline").removeClass("online-user");
+                $(".chatStatusoffline").text("Group");
+
+            }
+			
+			
+			
+			
+			
+            //for Users
+            if (userid !== "0") {
+                groupid = null;
+                ////
+                //adds the id if username to view
+                $('.rightPanel .' + $(this).attr('userName') + '').addClass(" d-show")
+                $('.rightPanel .chatName').html("" + toSolidUserName($(this).attr('userName')) + "")
+				
+
+            }
+			
+            //then restore previous messages
+            //////
+			
+
+            $.ajax('/api/ChatHistory/GetChatHistory',
+                {
+                    type: 'Post', // http method
+                    dataType: "json",
+					
+                    "headers": {
+                        "accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + String(localStorage.getItem('token'))
+                    },
+                    "data": JSON.stringify({
+                        "skip": 0,
+                        "take": 10,
+                        "ToUserId": userid,
+                        "TogroupId": groupid
+                    }), // load last 20 chats
+                    success: function (data, status, xhr) {
+                        $('.d-show').html(""); // empty the page
+                        data.forEach(RenderRecentMessages);
+
+                        //now go send seen acknowledge after its added
+                        //temporary only for ptp chats
+                        ack(frontusername)
+
+                        console.log(data);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        ////////
+                        var response = jQuery.parseJSON(xhr.responseText);
+                        ////////
+                        console.log(response);
+                        ////////
+                        //grid.dataSource.read();
+                    }
+                });
+
+			
+
+			
+		 
+
+
+        });
+
+
+        $.ajax('@Url.Action("CurrentUserChatList","User")',
+            {
+                type: 'Get', // http method
+                //data: { skip: 0, take: 20 }, // load last 20 chats
+                dataType: "json",
+
+                "headers": {
+                    "accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + String(localStorage.getItem('token'))
+                },
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    data.forEach(RenderChatList);
+                    renderonlineusers();
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var response = jQuery.parseJSON(xhr.responseText);
+                    notyf.dismissAll();
+                    notyf.error({
+                        message: response.Message,
+                        duration: 5000
+
+                    });
+                    //grid.dataSource.read();
+                }
+            });
+
+
+        function RenderChatList(item, index) {
+			
+            decodedHeader = jwt_decode( String(localStorage.getItem('token')) );
+            //
+            debugger;
+
+            $("#theusername").text(decodedHeader.UserName);
+            //debugger;
+
+            var showingname=null;
+            //////
+            if (item.userName == decodedHeader.UserName) {
+                showingname="MySelf";
+            }else{
+                showingname = item.userName;
+            }
+			
+			
+            //Renders the id for each of group & personal chat
+            var FrontendIdentifier = null;
+            var Groupname = null;
+            if (item.groupId === null) {
+                FrontendIdentifier = toUserName(item.userName);
+            } else if (item.groupId !== null) {
+                ////
+                FrontendIdentifier = toGroupName(item.groupId)
+                Groupname = item.userName;
+            }
+
+            //console.log(item, index,"test");
+            $(".chats").append('' +
+                '<div class="chatButton" groupname="' + Groupname + '" groupid="' + item.groupId + '" userid="' + item.userId + '" username="' + FrontendIdentifier + '"><div class="chatInfo"> <p class="name"> ' + showingname + '</p><p class="message"></p>  <div class="image"></div>  </div><div class="status normal"><p class="date">Count</p><p class="count">' + item.unReadcount + '</p><i class="material-icons read">done</i><i class="material-icons fixed">loyalty</i></div></div>'
+            );
+			
+            $(' <div  onscroll="scrollevent(' + ("'" + FrontendIdentifier + "'") + ')" class="convHistory userBg d-none-all ' + FrontendIdentifier + ' groupname="' + Groupname + '" groupid="' + item.groupId + '" userid="' + item.userId + '" username="' + FrontendIdentifier + ' " >   </div> ').insertAfter(".topBar");
+			
+			
+
+            //$('.' + FrontendIdentifier).scrollTop = $('.' + FrontendIdentifier).scrollHeight - $('.' + FrontendIdentifier).scrollTop;
+            //$('.' + FrontendIdentifier).scrollTop($('.' + FrontendIdentifier).height())
+        }
+
+
+
+        //Converts group ids into frontend based groupids
+        function toGroupName(groupid){
+            return "group-" + groupid
+        }
+		
+        //converts frontend group ids into backend solidgroup ids
+        function toSolidGroupId(groupid) {
+            return groupid.slice(6)
+        }
+
+
+        //Converts user ids into frontend based userids
+        function toUserName(userid) {
+            return "user-" + userid
+        }
+
+        //converts frontend user ids into backend soliduser ids
+        function toSolidUserName(userid) {
+            return userid.slice(5)
+        }
+			
+
+		
+
+		
+		
+
+        // modal for creating group
+		
+        var modal = document.getElementById("myModal");
+		
+
+        // Get the button that opens the modal
+        var newGroup = document.getElementById("newGroup");
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+		
+        var theoverlay = document.getElementById("overlay");
+        var themenuWrap = document.getElementById("menuWrap");
+		
+        var createnewgroupbtn = document.getElementById("createnewgroupbtn");
+        var groupname = document.getElementById("groupname");
+        var peopleingroup = document.getElementById("peopleingroup");
+		
+        var People = document.getElementById("openPeople");
+
+
+        // When the user clicks the button, open the modal
+        newGroup.onclick = function () {
+			
+            theoverlay.style.display = "none";
+            themenuWrap.style.display = "none";
+
+            $(".overlay, .myModal").fadeIn(180);
+            $(".myModal").animate({ opacity: '1', left: '0px' }, 180);
+
+            modal.style.display = "block";
+			
+
+        }
+
+        People.onclick = function () {
+
+            theoverlay.style.display = "none";
+            themenuWrap.style.display = "none";
+
+            $(".overlay, .People").fadeIn(180);
+            $(".People").animate({ opacity: '1', left: '0px' }, 180);
+			
+			
+            //load people
+			
+            $.ajax('/api/User/AllUsers',
+                {
+                    type: 'post', // http method
+                    dataType: "json",
+					
+                    "headers": {
+                        "accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + String(localStorage.getItem('token'))
+                    },
+                    "data": JSON.stringify({
+                        "skip": 0,
+                        "take": 50
+                    }), // load last 20 chats
+                    success: function (data, status, xhr) {
+
+                        console.log(data);
+                        data.forEach(RenderAllPeopleList);
+					
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        ////////
+                        var response = jQuery.parseJSON(xhr.responseText);
+                        ////////
+                        console.log(response);
+                        ////////
+                        //grid.dataSource.read();
+                    }
+                });
+
+
+            People.style.display = "block";
+			
+
+
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+            theoverlay.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }	
+
+        createnewgroupbtn.onclick = function (event) {
+            //send group info for the backend
+			
+
+
+            $.ajax('/api/Groups/NewGroupWithPeople',
+                {
+                    type: 'Post', // http method
+                    dataType: "json",
+					
+                    "headers": {
+                        "accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + String(localStorage.getItem('token'))
+                    },
+                    "data": JSON.stringify({
+						
+                        "groupName": groupname.value,
+                        "people": peopleingroup.value
+                    }), // load last 20 chats
+                    success: function (data, status, xhr) {
+                        alert(data);
+                        modal.style.display = "none";
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        ////////
+                        alert(jQuery.parseJSON(xhr.responseText));
+                        var response = jQuery.parseJSON(xhr.responseText);
+                        ////////
+                        console.log(response);
+                        ////////
+                        //grid.dataSource.read();
+                    }
+                });
+			
+
+
+        }
+
+
+
+		
+		
+        function RenderAllPeopleList(item, index) {
+			
+            decodedHeader = jwt_decode( String(localStorage.getItem('token')) );
+            //
+
+            var showingname=null;
+            //////
+            if (item.userName == decodedHeader.UserName) {
+                showingname="MySelf";
+            }else{
+                showingname = item.userName;
+            }
+			
+			
+            //Renders the id for each of group & personal chat
+            var FrontendIdentifier = null;
+            var Groupname = null;
+			
+            FrontendIdentifier = toUserName(item.userName);
+			
+
+            // adds to right panel if there was no converstaion before 
+
+            if ($('.convHistory').hasClass(''+FrontendIdentifier+'') === false ) {
+                //
+                $(' <div onscroll="scrollevent(' + ("'" + FrontendIdentifier + "'") + ')" class="convHistory userBg d-none-all ' + FrontendIdentifier + ' groupname="' + Groupname + '" groupid="' + item.groupId + '" userid="' + item.userId + '" username="' + FrontendIdentifier + ' " >   </div> ').insertAfter(".topBar");
+
+
+            }
+
+            $("#AllPeople").append('' +
+                '<div class="chatButton" groupname="' + Groupname + '" groupid="' + item.groupId + '" userid="' + item.userId + '" username="' + FrontendIdentifier + '"><div class="chatInfo"> <p class="name"> ' + showingname + '</p><p class="message"></p> <div class="image"></div>  </div><div class="status normal"><p class="date">Now</p><p class="count">42</p><i class="material-icons read">done</i><i class="material-icons fixed">loyalty</i></div></div>'
+            );
+
+						
+			
+			
+
+        }
+		
+		
+		
+        var onlineusers=null;
+		
+        //online current users
+        function renderonlineusers(){
+		
+            $(".online-user").removeClass("online-user"); // remove all online first
+
+            $.ajax('/api/User/OnlineUsersUserId',
+                {
+                    type: 'get', // http method
+                    dataType: "json",
+					
+                    "headers": {
+                        "accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + String(localStorage.getItem('token'))
+                    },
+                    "data": JSON.stringify({
+						
+                        "groupName": groupname.value,
+                        "people": peopleingroup.value
+                    }), // load last 20 chats
+                    success: function (data, status, xhr) {
+				    
+                        onlineusers = data;
+                        data.forEach(RenderOnlinePeople);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        ////////
+                        alert(jQuery.parseJSON(xhr.responseText));
+                        var response = jQuery.parseJSON(xhr.responseText);
+                        ////////
+                        console.log(response);
+                        ////////
+                        //grid.dataSource.read();
+                    }
+                });
+        }
+
+
+        function RenderOnlinePeople(item, index) {
+            //
+            $('[username=' + toUserName(item.userName) + '] .chatInfo .name ').addClass(" online-user");
+        }
+
+
+        //$(".convHistory").bind('scroll', function () {
+        //	console.log('Event worked');
+        //});
+
+		
+        //		$("div.convHistory").on('scroll', function () {
+//    console.log('Event Fired');
+//});
+
+		
+
+        ack = function sendSeenAcknowledge(frontid){
+            //debugger;
+            var list = [];
+
+            $('.'+ frontid ).children('.msg').each(function () {
+				
+                var id = $(this).attr("messageid");
+                if ($(this).attr("messagerecordstatus") === "0") {
+                    list.push(Number(id));
+                }
+            });
+            console.log(list);
+            if(list.length > 0) {
+                connection.invoke("MessageSeen", list).catch(function (err) {
+                    return console.error(err.toString());
+                });
+            }
+        }
+
+
+
+        //$('.rightPanel .convHistory').scroll(function () {
+        //	console.log('Event worked2');
+
+        //});
+
+
+    });
+	
+
+    var ack;
+
+    /////////////// load recent messages
+		
+
+    function scrollevent(e) {
+
+        //console.log(e);
+        laodchats(e);
+		
+    }
+
+
+
+    async function laodchats(currentelement) {
+		
+        currentelement = '.' + currentelement;
+        var userid = $(currentelement).attr("userid");
+        var groupid = $(currentelement).attr("groupid");
+        var frontusername = $(currentelement).attr("username");
+        if(groupid==="null"){
+            groupid = null;
+        }
+        if (userid === "null") {
+            userid = null;
+        }
+        //console.log( $(currentelement).scrollTop())
+
+        if ($(currentelement).scrollTop() === 0) {
+			
+            var skip = $(currentelement).children().length;
+            //////debugger;
+            var lastposition = $(currentelement).height();
+            $.ajax('/api/ChatHistory/GetChatHistory',
+                {
+                    type: 'Post', // http method
+                    dataType: "json",
+
+                    "headers": {
+                        "accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + String(localStorage.getItem('token'))
+                    },
+                    "data": JSON.stringify({
+                        "skip": skip,
+                        "take": 10,
+                        "ToUserId": userid,
+                        "TogroupId": groupid
+                    }), // load last 20 chats
+                    success: function (data, status, xhr) {
+                        //$(currentelement).scrollTop($(currentelement).scrollTop() + $(currentelement).height());
+                        //////debugger;
+                        //console.log(data,"xx");
+                        //data.forEach(RenderRecentMessages);
+
+                        for (i = data.length - 1; i >= 0; i = i - 1) {
+                            //////debugger;
+                            RenderRecentMessages(data[i]);
+                        }
+
+                        //then send seen acknoledge for currntly loaded messages
+						
+                        if ($("." + frontusername).hasClass("d-show")) {
+                            //debugger;
+                            ack(frontusername)
+                        };
+
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        ////////
+						
+                        //////debugger;
+                        var response = jQuery.parseJSON(xhr.responseText);
+                        ////////
+                        //console.log(response);
+                        ////////
+                        //grid.dataSource.read();
+                    }
+                });
+
+        }
+    };
+    decodedHeader = jwt_decode( String(localStorage.getItem('token')) );
+    debugger;
+    $("#theusername").text(decodedHeader.UserName);
+
+    function RenderRecentMessages(item) {
+        debugger;
+        //////
+        if (item.userId == decodedHeader.UserGuid) {
+
+            var res = rendermyowntextmessage(item);
+            $('.d-show').prepend(res)
+        } else {
+            var res = rendertextmessage(item)
+            $('.d-show').prepend(res)
+        }
+
+    }
+
+
+    function rendertextmessage(item) {
+        ////////debugger;
+        var html = '<div messageid="' + item.id + '" messagerecordstatus="' + item.recordStatus + '" class="msg messageReceived">' + item.message + ' <span class="timestamp" >  ' + item.shortCreateAt + ' </span> </div>'
+
+        return html;
+
+    }
+
+
+    function rendermyowntextmessage(item) {
+        ////////debugger;
+        var readStatus = ''
+        if (item.recordStatus === 0) {
+            readStatus = '<i class="material-icons readStatus">done</i> '
+        } else if (item.recordStatus === 1) {
+            readStatus = '<i class="material-icons readStatus">done_all</i> '
+        }
+        var html = '<div messageid="' + item.id + '" messagerecordstatus="' + item.recordStatus + '"  class="msg messageSent">' + item.message + ' ' + readStatus + ' <span class="timestamp" > ' + item.shortCreateAt + ' </span> </div>'
+        return html;
+
+    }
+
+    
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/ServiceWorker.js");
+        });
+    }
+
+
+</script>
+
