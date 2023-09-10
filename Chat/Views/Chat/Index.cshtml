@@ -245,7 +245,7 @@
 					</button>
 				</a>*@
 
-				<button class="lo">
+				<button class="lo" id="logout">
 					<i class="material-icons">&#xE879;</i>
 
 					<span>Logout</span>
@@ -400,14 +400,22 @@
         //    }
         //})
 
-       
-
-        var decodedHeader = null;
 
         if (localStorage.getItem('token') === null) {
             location.replace("/");
             return;
         }
+       
+
+        var decodedHeader = null;
+
+        
+
+        $(document).on("click", '#logout', function () {
+            localStorage.setItem('token', '' );
+            window.location.replace("/");
+
+        });
 
         const connection = new signalR.HubConnectionBuilder()
             .withUrl('/chathub', {
